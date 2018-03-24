@@ -58,8 +58,8 @@ impl Display for Level {
             &Level::Info => write!(f, "info"),
             &Level::Warn => write!(f, "warning"),
             &Level::Error => write!(f, "error"),
-            &Level::Fatal => write!(f, "fatal (syslog critical)"),
-            &Level::Panic => write!(f, "panic (syslog emergency)"),
+            &Level::Fatal => write!(f, "fatal"),
+            &Level::Panic => write!(f, "panic"),
         }
     }
 }
