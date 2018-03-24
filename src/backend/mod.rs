@@ -10,7 +10,7 @@ mod stderr;
 pub use self::cee_syslog::CeeSyslog;
 pub use self::stderr::Stderr;
 
-pub trait Backend {
+pub trait Backend: Clone {
     fn send(&mut self, name: &String, level: Level, pairs: &HashMap<String, Value>);
 }
 
