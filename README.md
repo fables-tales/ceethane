@@ -133,10 +133,9 @@ log:
 fn put_score(&mut self, user_id: i32, score: i32) -> Result<(), Error> {
     let ll = &self.ll;                                                  ```
     let mut ll = ll.kvs(logf!(
-        "user_id" => user_id,                                           ### Logging errors
+        "user_id" => user_id,
         "action" => "put_score",
     ));
-                                                                         ## What is that kvs thing?
     ll.info("started");
 ```
 
