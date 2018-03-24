@@ -1,6 +1,5 @@
 use std::collections::HashMap;
-use std::os::unix::net::UnixStream;
-use std::io::prelude::*;
+use std::os::unix::net::UnixDatagram;
 use serde_json::Value;
 use ::Level;
 use ::backend::Backend;
@@ -20,9 +19,12 @@ impl CeeSyslog {
 
 impl Backend for CeeSyslog {
     fn send(&mut self, name: &String, level: Level, pairs: &HashMap<String, Value>) {
-        let mut stream = match UnixStream::connect(&self.destination) {
+        let stream = match UnixDatagram::unbound() {
             Ok(s) => s,
-            Err(_) => return,
+            Err(e) => {
+                println!("{:?}", e);
+                return
+            },
         };
 
         match stream.set_nonblocking(true) {
@@ -31,7 +33,7 @@ impl Backend for CeeSyslog {
         };
 
         let frame = super::to_cee_frame(name, level, pairs);
-        match stream.write_all(&frame.as_bytes()) {
+        match stream.send_to(&frame.as_bytes(), &self.destination) {
             Ok(_) => true,
             Err(_) => return,
         };
