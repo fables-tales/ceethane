@@ -1,6 +1,6 @@
 //! # Ceethane
 //! Ceethane implements a simple logging utility which understands CEE and syslog
-//! out of the box, along with a simple structured stderr logger.
+//! out of the box, along with a simple structured stdout logger.
 #![deny(warnings, missing_debug_implementations, missing_copy_implementations, missing_docs)]
 
 extern crate time;
@@ -13,7 +13,7 @@ pub mod logger;
 
 use std::fmt::{self, Display};
 use std::env;
-use backend::{Fused, CeeSyslog, Stderr};
+use backend::{Fused, CeeSyslog, Stdout};
 
 #[macro_export]
 macro_rules! logf {
@@ -65,10 +65,10 @@ impl Display for Level {
 }
 
 /// default constructs the default Ceethane logger. This logger combines a logger
-/// that prints loglines to stderr with a logger that writes those logs to a syslog
+/// that prints loglines to stdout with a logger that writes those logs to a syslog
 /// socket. The lines emitted are in the [CEE](https://www.rsyslog.com/json-elasticsearch/)
 /// format, with syslog headers.
-pub fn default(level: Level) -> logger::KvsLogger<Fused<CeeSyslog, Stderr>> {
+pub fn default(level: Level) -> logger::KvsLogger<Fused<CeeSyslog, Stdout>> {
     let app_name = match env::var("SYSLOG_PROGRAM") {
         Ok(name) => name,
         Err(_) => env::args().next().unwrap().split("/").last().unwrap().into(),
@@ -80,8 +80,8 @@ pub fn default(level: Level) -> logger::KvsLogger<Fused<CeeSyslog, Stderr>> {
     };
 
     let cee = CeeSyslog::new(target);
-    let stderr = Stderr::new();
-    let backend = backend::Fused::new(cee, stderr);
+    let stdout = Stdout::new();
+    let backend = backend::Fused::new(cee, stdout);
     logger::KvsLogger::new(
         app_name,
         level,

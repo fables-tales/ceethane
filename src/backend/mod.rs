@@ -5,10 +5,10 @@ use super::Level;
 use time;
 
 mod cee_syslog;
-mod stderr;
+mod stdout;
 
 pub use self::cee_syslog::CeeSyslog;
-pub use self::stderr::Stderr;
+pub use self::stdout::Stdout;
 
 pub trait Backend: Clone {
     fn send(&mut self, name: &String, level: Level, pairs: &HashMap<String, Value>);
