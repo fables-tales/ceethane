@@ -10,18 +10,13 @@ use ::backend::Backend;
 
 /// Logger defines the core interface for ceethane loggers
 pub trait Logger: Clone {
-    /// Next is the type that is returned from methods that
-    /// augment this logger with more information. Typically
-    /// on implementations this will always be `Self`
-    type Next: Logger;
-
     /// kvs provides more context to this logger, and produces a
     /// new logger which has that information
-    fn kvs(&self, HashMap<String, Value>) -> Self::Next;
+    fn kvs(&self, HashMap<String, Value>) -> Self;
 
     /// err is used to provide an error as additional contexct to
     /// build a new logger
-    fn err<E>(&self, E) -> Self::Next where E: Error;
+    fn err<E>(&self, &E) -> Self where E: Error;
 
     /// debug emits a log message at the debug level
     fn debug<T>(&mut self, msg: &T) where T: Display + ?Sized;
@@ -68,8 +63,6 @@ impl <B: Backend> KvsLogger<B> {
 }
 
 impl <B: Backend> Logger for KvsLogger<B> {
-    type Next = Self;
-
     fn kvs(&self, kvs: HashMap<String, Value>) -> Self {
         let mut new_kvs = self.keyvalues.clone();
         for (k, v) in kvs.into_iter() {
@@ -82,7 +75,7 @@ impl <B: Backend> Logger for KvsLogger<B> {
         new
     }
 
-    fn err<E: Error>(&self, err: E) -> Self {
+    fn err<E: Error>(&self, err: &E) -> Self {
         let mut new_kvs = HashMap::new();
         new_kvs.insert("err".into(), json!(format!("{}", err)));
 
@@ -90,31 +83,31 @@ impl <B: Backend> Logger for KvsLogger<B> {
     }
 
     fn debug<T>(&mut self, msg: &T) where T: Display + ?Sized {
-        if self.level <= Level::Debug {
+        if self.level >= Level::Debug {
             self.send(Level::Debug, msg.to_string());
         }
     }
 
     fn info<T>(&mut self, msg: &T) where T: Display + ?Sized {
-        if self.level <= Level::Info {
+        if self.level >= Level::Info {
             self.send(Level::Info, msg.to_string());
         }
     }
 
     fn warn<T>(&mut self, msg: &T) where T: Display + ?Sized {
-        if self.level <= Level::Warn {
+        if self.level >= Level::Warn {
             self.send(Level::Warn, msg.to_string());
         }
     }
 
     fn error<T>(&mut self, msg: &T) where T: Display + ?Sized {
-        if self.level <= Level::Error {
+        if self.level >= Level::Error {
             self.send(Level::Error, msg.to_string());
         }
     }
 
     fn fatal<T>(&mut self, msg: &T) where T: Display + ?Sized {
-        if self.level <= Level::Fatal {
+        if self.level >= Level::Fatal {
             self.send(Level::Fatal, msg.to_string());
         }
     }

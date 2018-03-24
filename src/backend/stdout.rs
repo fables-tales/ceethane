@@ -1,6 +1,5 @@
 use std::collections::HashMap;
 use serde_json::{Value};
-use std::io::{self, Write};
 use time;
 use serde_json;
 
@@ -31,9 +30,6 @@ impl Backend for Stdout {
             Err(_) => return,
         };
 
-        match io::stdout().write(&frame.as_bytes()) {
-            Ok(_) => true,
-            Err(_) => return,
-        };
+        println!("{}", frame);
     }
 }
