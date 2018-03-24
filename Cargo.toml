@@ -1,0 +1,9 @@
+[package]
+name = "ceethane"
+version = "0.1.0"
+authors = ["Sam Phippen <samphippen@googlemail.com>"]
+
+[dependencies]
+serde_json="1.0"
+libc = "0.2.39"
+time = "0.1"
