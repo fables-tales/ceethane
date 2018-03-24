@@ -195,3 +195,13 @@ will print:
 ```
 {"err":"Error { repr: Custom(Custom { kind: Other, error: StringError(\"oh no!\") }) }","user_id":1337,"msg":"something went wrong doing IO","level":"error","syslog_program":"err","time":"2018-03-24T14:45:12.000+00:00"}
 ```
+
+## Syslog configuration
+
+By default, ceethane will emit syslog frames to the default syslog socket for
+the system. It supports standard environment variables for overriding that
+
+| env var | default value | usage |
+| ------- | ------------- | ----- |
+| `SYSLOG_SOCKET` | `/dev/log` on linux | which FD should be used as the target socket for syslog datagrams |
+| `SYSLOG_PROGRAM` | the last '/' separated part of `$0` | what program name the logger should report to syslog |
