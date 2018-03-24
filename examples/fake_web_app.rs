@@ -79,5 +79,6 @@ fn main() {
             "environment" => "development",
     ));
 
+    ll.info("program booted");
     WebServer::new(ll).put_score(32, 32);
 }

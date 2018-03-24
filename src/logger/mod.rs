@@ -77,7 +77,7 @@ impl <B: Backend> Logger for KvsLogger<B> {
 
     fn err<E: Error>(&self, err: &E) -> Self {
         let mut new_kvs = HashMap::new();
-        new_kvs.insert("err".into(), json!(format!("{}", err)));
+        new_kvs.insert("err".into(), json!(format!("{:?}", err)));
 
         self.kvs(new_kvs)
     }
