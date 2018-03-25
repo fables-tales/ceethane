@@ -2,6 +2,11 @@
 name = "ceethane"
 version = "0.1.0"
 authors = ["Sam Phippen <samphippen@googlemail.com>"]
+description = "A logging crate designed to make it easy to inject and pass contextual information to log lines"
+documentation = "https://docs.rs/ceethane"
+homepage = "https://github.com/samphippen/ceethane"
+repository = "https://github.com/samphippen/ceethane"
+license = "MIT OR Apache-2.0"
 
 [dependencies]
 serde_json="1.0"
