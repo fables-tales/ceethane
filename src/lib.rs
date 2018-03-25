@@ -9,29 +9,12 @@ extern crate serde_json;
 extern crate libc;
 
 mod backend;
+mod macros;
 pub mod logger;
 
 use std::fmt::{self, Display};
 use std::env;
 use backend::{Fused, CeeSyslog, Stdout};
-
-#[macro_export]
-macro_rules! logf {
-    (@single $($x:tt)*) => (());
-    (@count $($rest:expr),*) => (<[()]>::len(&[$(logf!(@single $rest)),*]));
-
-    ($($key:expr => $value:expr,)+) => { logf!($($key => $value),+) };
-    ($($key:expr => $value:expr),*) => {
-        {
-            let _cap = logf!(@count $($key),*);
-            let mut _map = ::std::collections::HashMap::with_capacity(_cap);
-            $(
-                let _ = _map.insert($key.into(), json!($value));
-            )*
-            _map
-        }
-    };
-}
 
 /// Level implements a logging message severity level, matching the syslog
 /// severity levels
