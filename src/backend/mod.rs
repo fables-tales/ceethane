@@ -10,7 +10,7 @@ mod stdout;
 pub use self::cee_syslog::CeeSyslog;
 pub use self::stdout::Stdout;
 
-pub trait Backend: Clone {
+pub trait Backend {
     fn send(&mut self, name: &String, level: Level, pairs: &HashMap<String, Value>);
 }
 

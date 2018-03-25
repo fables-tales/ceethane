@@ -9,7 +9,7 @@ use ::Level;
 use ::backend::Backend;
 
 /// Logger defines the core interface for ceethane loggers
-pub trait Logger: Clone {
+pub trait Logger {
     /// kvs provides more context to this logger, and produces a
     /// new logger which has that information
     fn kvs(&self, HashMap<String, Value>) -> Self;
@@ -43,7 +43,7 @@ pub struct KvsLogger<T: Backend + Clone> {
     backend: T,
 }
 
-impl <B: Backend> KvsLogger<B> {
+impl <B: Backend + Clone> KvsLogger<B> {
     /// new creates a new KvsLogger for the specified application name, logging
     /// level and backend.
     pub fn new(name: String, level: Level, backend: B) -> Self {
@@ -62,7 +62,7 @@ impl <B: Backend> KvsLogger<B> {
     }
 }
 
-impl <B: Backend> Logger for KvsLogger<B> {
+impl <B: Backend + Clone> Logger for KvsLogger<B> {
     fn kvs(&self, kvs: HashMap<String, Value>) -> Self {
         let mut new_kvs = self.keyvalues.clone();
         for (k, v) in kvs.into_iter() {
